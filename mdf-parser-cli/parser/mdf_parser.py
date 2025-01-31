@@ -13,35 +13,57 @@ def parse_mdf_file(file_path: str) -> Dict[str, Dict[str, Union[str, List[str]]]
     """
     atoms_data = {}
     
+    in_molecule_section = False
+    column_indices = {}
+    
     try:
         with open(file_path, 'r') as f:
             for line_num, line in enumerate(f, 1):
                 line = line.strip()
                 
-                # Skip empty lines and comments
-                if not line or line.startswith(('!', '#')):
+                # Skip empty lines
+                if not line:
+                    continue
+                    
+                # Handle column definitions
+                if line.startswith('@column'):
+                    parts = line.split()
+                    if len(parts) >= 3:
+                        col_num = int(parts[1])
+                        col_name = parts[2]
+                        column_indices[col_name] = col_num - 1
+                    continue
+                
+                # Check for molecule section
+                if line.startswith('@molecule'):
+                    in_molecule_section = True
+                    continue
+                
+                # Skip comments and headers
+                if line.startswith(('!', '#')) or not in_molecule_section:
                     continue
                 
                 try:
+                    # Split on whitespace while preserving quoted strings
                     parts = line.split()
-                    if len(parts) < 12:
-                        logging.warning(f"Line {line_num}: Insufficient data columns")
+                    if not parts:
                         continue
                     
                     # Store the full atom ID as a string
                     atom_id = parts[0]
-                    # Extract atom type from column 2
-                    atom_type = parts[1]
-                    # Get charge group from column 3
-                    charge_group = parts[2]
                     
-                    # Extract neighbor information from the connections column (12)
+                    # Get connections from the last field
                     neighbors = []
-                    if len(parts) >= 12:
-                        connections = parts[11].split()
-                        for neighbor in connections:
-                            if neighbor != '?':
-                                neighbors.append(neighbor)
+                    for part in parts:
+                        if part.startswith('C') and len(parts) > parts.index(part) + 1:
+                            connections = parts[parts.index(part) + 1].split('/')
+                            for conn in connections:
+                                if conn != '?' and not conn.isspace():
+                                    neighbors.append(conn.strip())
+                    
+                    # Store atom data
+                    atom_type = parts[1] if len(parts) > 1 else ''
+                    charge_group = parts[2] if len(parts) > 2 else ''
                     
                     atoms_data[atom_id] = {
                         'charge_group': charge_group,
