@@ -62,10 +62,7 @@ def main():
         # Save output
         save_output(
             file_name=args.output,
-            atoms=atoms_data,
-            bonds=bonds,
-            angles=angles,
-            dihedrals=dihedrals,
+            atoms_data=atoms_data,
             json_format=args.json,
             separate_files=args.separate
         )
