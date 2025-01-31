@@ -16,18 +16,29 @@ class CharmmProcessor:
         self.current_data: Dict[str, pd.DataFrame] = {}
         self.filepath: Optional[str] = None
 
-    def process_file(self, filepath: str, output_dir: str) -> Dict[str, pd.DataFrame]:
-        """Process a CHARMM parameter file and store results"""
+    def process_file(self, filepath: str, output_dir: str, json_format: bool = False) -> Dict[str, pd.DataFrame]:
+        """
+        Process a CHARMM parameter file and store results
+        
+        Args:
+            filepath: Path to the CHARMM parameter file
+            output_dir: Directory to save output files
+            json_format: If True, save as JSON instead of CSV
+        """
         logging.info(f"Processing CHARMM parameter file: {filepath}")
         self.filepath = filepath
         self.current_data = parse_charmm_parameter_file(filepath)
         
-        # Save each section to a CSV file in the output directory
+        # Save each section to a file in the output directory
         logging.info(f"Saving parsed data to: {output_dir}")
         for section_name, df in self.current_data.items():
             if not df.empty:
-                output_path = os.path.join(output_dir, f'{section_name}.csv')
-                df.to_csv(output_path, index=False)
+                if json_format:
+                    output_path = os.path.join(output_dir, f'{section_name}.json')
+                    df.to_json(output_path, orient='records', indent=2)
+                else:
+                    output_path = os.path.join(output_dir, f'{section_name}.csv')
+                    df.to_csv(output_path, index=False)
                 logging.debug(f"Saved {section_name} section with {len(df)} entries to {output_path}")
         
         return self.current_data
