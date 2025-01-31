@@ -14,34 +14,53 @@ from ..charmm_parser.parsers import parse_charmm_parameter_file
 
 console = Console()
 
-def compare_atoms(mdf_atoms: Set[str], charmm_atoms: Set[str]) -> Set[str]:
+def compare_atoms(mdf_atoms: Set[str], charmm_atoms: Set[str], charmm_data: pd.DataFrame) -> List[Dict]:
     """Compare atom types between MDF and CHARMM data."""
-    return mdf_atoms - charmm_atoms
+    results = []
+    for atom in mdf_atoms:
+        match = charmm_data[charmm_data['Force Field Type'] == atom]
+        results.append({
+            'parameter_type': 'atom',
+            'parameters': atom,
+            'found': not match.empty,
+            'line_number': int(match['Line Number'].iloc[0]) if not match.empty else None
+        })
+    return results
 
-def compare_parameters(mdf_params: Dict, charmm_params: Dict) -> Set[Tuple]:
+def compare_parameters(mdf_params: Dict, charmm_params: Dict, charmm_df: pd.DataFrame, param_type: str) -> List[Dict]:
     """Compare parameter tuples between MDF and CHARMM data."""
-    return set(mdf_params.keys()) - set(charmm_params.keys())
+    results = []
+    for param_key in mdf_params.keys():
+        param_str = '-'.join(param_key)
+        # Create conditions for each atom in the parameter
+        conditions = [
+            (charmm_df[f'Atom {i+1}'] == atom) 
+            for i, atom in enumerate(param_key)
+        ]
+        # Combine all conditions
+        match = charmm_df[pd.concat(conditions, axis=1).all(axis=1)]
+        
+        results.append({
+            'parameter_type': param_type,
+            'parameters': param_str,
+            'found': not match.empty,
+            'line_number': int(match['Line Number'].iloc[0]) if not match.empty else None
+        })
+    return results
 
-def save_results(results: Dict, output_file: str, json_format: bool = False) -> None:
+def save_results(results: List[Dict], output_file: str, json_format: bool = False) -> None:
     """Save comparison results to file in CSV or JSON format."""
     if json_format:
         with open(output_file, 'w') as f:
             json.dump(results, f, indent=2)
     else:
-        rows = []
-        for param_type, missing in results.items():
-            if param_type == 'atoms':
-                rows.extend([('atom', atom) for atom in missing])
-            else:
-                rows.extend([(param_type[:-1], '-'.join(param)) for param in missing])
-        
-        df = pd.DataFrame(rows, columns=['parameter_type', 'parameters'])
+        df = pd.DataFrame(results)
         df.to_csv(output_file, index=False)
 
 def main(
     mdf_file: str,
-    charmm_file: str,
-    output_file: str = 'missing_parameters.csv',
+    charmm_file: str, 
+    output_file: str = 'parameter_check.csv',
     json_format: bool = False,
     verbose: bool = False,
     log_file: str = None
