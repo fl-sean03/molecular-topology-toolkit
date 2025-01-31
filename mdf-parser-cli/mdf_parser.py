@@ -5,10 +5,9 @@ import logging
 import os
 import sys
 from rich.console import Console
-from .mdf_parser import parse_mdf_file
-from .topology import extract_topology
-from .output_handler import save_output
-from tools.charmm_parser.parser import CharmmProcessor
+from parser.topology import extract_topology
+from parser.output_handler import save_output
+from parser.charmm_parser import CharmmProcessor
 
 console = Console()
 

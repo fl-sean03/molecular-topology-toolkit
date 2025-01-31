@@ -6,8 +6,8 @@ Provides access to MDF and CHARMM parameter file parsing capabilities.
 
 import argparse
 import sys
-from tools.mdf_parser.parser import main as mdf_main
-from tools.charmm_parser.parser import main as charmm_main
+from parser.mdf_parser import main as mdf_main
+from parser.charmm_parser import CharmmProcessor
 
 def main():
     parser = argparse.ArgumentParser(
