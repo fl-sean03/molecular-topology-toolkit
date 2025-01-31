@@ -40,16 +40,16 @@ def main():
                                help='Enable detailed output')
         mdf_parser.add_argument('--log', help='Save logs to specified file')
 
-    # CHARMM Parser
-    charmm_parser = subparsers.add_parser('charmm', help='Parse CHARMM parameter files')
-    charmm_parser.add_argument('input_file', help='Path to CHARMM parameter file')
-    charmm_parser.add_argument('-o', '--output_dir', default='.',
-                              help='Output directory for parsed files')
-    charmm_parser.add_argument('--json', action='store_true',
-                              help='Output as JSON instead of CSV')
-    charmm_parser.add_argument('--verbose', action='store_true',
-                              help='Enable detailed output')
-    charmm_parser.add_argument('--log', help='Save logs to specified file')
+        # CHARMM Parser
+        charmm_parser = subparsers.add_parser('charmm', help='Parse CHARMM parameter files')
+        charmm_parser.add_argument('input_file', help='Path to CHARMM parameter file')
+        charmm_parser.add_argument('-o', '--output_dir', default='.',
+                                  help='Output directory for parsed files')
+        charmm_parser.add_argument('--json', action='store_true',
+                                  help='Output as JSON instead of CSV')
+        charmm_parser.add_argument('--verbose', action='store_true',
+                                  help='Enable detailed output')
+        charmm_parser.add_argument('--log', help='Save logs to specified file')
 
     # Parameter Checker
     checker_parser = subparsers.add_parser('check', help='Check parameters between MDF and CHARMM files')
