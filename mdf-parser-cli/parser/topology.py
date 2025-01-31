@@ -11,36 +11,67 @@ def extract_topology(atoms_data: Dict[str, Dict]) -> Tuple[Set[Tuple], Set[Tuple
     Returns:
         Tuple of (bonds, angles, dihedrals) sets
     """
-    bonds = set()
-    angles = set()
-    dihedrals = set()
-    
+    bonds_set = set()
+    angles_set = set()
+    dihedrals_set = set()
+
     # Extract bonds
-    for atom_id, data in atoms_data.items():
-        atom_group = data['charge_group']
-        for neighbor in data['neighbors']:
-            if neighbor in atoms_data:
-                neighbor_group = atoms_data[neighbor]['charge_group']
-                bond = tuple(sorted([atom_group, neighbor_group]))
-                bonds.add(bond)
-    
+    for atomA, dataA in atoms_data.items():
+        groupA = dataA["charge_group"]
+        for nbr_label in dataA["neighbors"]:
+            if nbr_label not in atoms_data:
+                continue
+            groupB = atoms_data[nbr_label]["charge_group"]
+            bond_tup = tuple(sorted([groupA, groupB]))
+            bonds_set.add(bond_tup)
+
     # Extract angles
-    for atom_id, data in atoms_data.items():
-        if len(data['neighbors']) >= 2:
-            center_group = data['charge_group']
-            neighbors = data['neighbors']
-            
-            for i in range(len(neighbors)):
-                for j in range(i + 1, len(neighbors)):
-                    if neighbors[i] in atoms_data and neighbors[j] in atoms_data:
-                        group1 = atoms_data[neighbors[i]]['charge_group']
-                        group2 = atoms_data[neighbors[j]]['charge_group']
-                        angle = (group1, center_group, group2)
-                        angles.add(angle)
+    for b_label, b_info in atoms_data.items():
+        groupB = b_info["charge_group"]
+        nbrs = b_info["neighbors"]
+
+        for i in range(len(nbrs)):
+            for j in range(i + 1, len(nbrs)):
+                a_label, c_label = nbrs[i], nbrs[j]
+                if a_label not in atoms_data or c_label not in atoms_data:
+                    continue
+                groupA = atoms_data[a_label]["charge_group"]
+                groupC = atoms_data[c_label]["charge_group"]
+                sorted_ends = sorted([groupA, groupC])
+                angle_trip = (sorted_ends[0], groupB, sorted_ends[1])
+                angles_set.add(angle_trip)
+
+    # Extract dihedrals
+    bond_pairs = set()
+    for atomA, dataA in atoms_data.items():
+        for nbr in dataA["neighbors"]:
+            pair = tuple(sorted([atomA, nbr]))
+            bond_pairs.add(pair)
+
+    for bond_pair in bond_pairs:
+        b_label, c_label = bond_pair
+        if b_label not in atoms_data or c_label not in atoms_data:
+            continue
+
+        groupB = atoms_data[b_label]["charge_group"]
+        groupC = atoms_data[c_label]["charge_group"]
+        neighbors_b = [x for x in atoms_data[b_label]["neighbors"] if x != c_label]
+        neighbors_c = [x for x in atoms_data[c_label]["neighbors"] if x != b_label]
+
+        for a_label in neighbors_b:
+            if a_label not in atoms_data:
+                continue
+            groupA = atoms_data[a_label]["charge_group"]
+
+            for d_label in neighbors_c:
+                if d_label not in atoms_data or len({a_label, b_label, c_label, d_label}) < 4:
+                    continue
+                groupD = atoms_data[d_label]["charge_group"]
+                forward = (groupA, groupB, groupC, groupD)
+                reverse = forward[::-1]
+                dihedral_tup = min(forward, reverse)
+                dihedrals_set.add(dihedral_tup)
+
+    logging.debug(f"Extracted {len(bonds_set)} bonds, {len(angles_set)} angles, {len(dihedrals_set)} dihedrals")
     
-    # Extract dihedrals (optional)
-    # Implementation for dihedrals can be added here if needed
-    
-    logging.debug(f"Extracted {len(bonds)} bonds, {len(angles)} angles, {len(dihedrals)} dihedrals")
-    
-    return bonds, angles, dihedrals
+    return bonds_set, angles_set, dihedrals_set
