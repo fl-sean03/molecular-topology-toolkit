@@ -18,6 +18,7 @@ def main():
     
     # MDF Parser
     mdf_parser = subparsers.add_parser('mdf', help='Parse MDF files')
+    mdf_parser.add_argument('--param', help='Path to CHARMM parameter file')
     mdf_parser.add_argument('input_file', help='Path to the .mdf file')
     mdf_parser.add_argument('-o', '--output', default='topology.csv', 
                            help='Output file name')

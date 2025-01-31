@@ -8,6 +8,7 @@ from rich.console import Console
 from .mdf_parser import parse_mdf_file
 from .topology import extract_topology
 from .output_handler import save_output
+from tools.charmm_parser.parser import CharmmProcessor
 
 console = Console()
 
@@ -28,6 +29,7 @@ def main():
     parser = argparse.ArgumentParser(description='Parse MDF files and extract molecular topology.')
     parser.add_argument('input_file', help='Path to the .mdf file')
     parser.add_argument('-o', '--output', default='topology.csv', help='Output file name')
+    parser.add_argument('--param', help='Path to CHARMM parameter file')
     parser.add_argument('--json', action='store_true', help='Output as JSON instead of CSV')
     parser.add_argument('--separate', action='store_true', help='Save separate files for each component')
     parser.add_argument('--verbose', action='store_true', help='Enable detailed output')
