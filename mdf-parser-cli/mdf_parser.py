@@ -5,9 +5,9 @@ import logging
 import os
 import sys
 from rich.console import Console
-from parser.mdf_parser import parse_mdf_file
-from parser.topology import extract_topology
-from parser.output_handler import save_output
+from .mdf_parser import parse_mdf_file
+from .topology import extract_topology
+from .output_handler import save_output
 
 console = Console()
 
