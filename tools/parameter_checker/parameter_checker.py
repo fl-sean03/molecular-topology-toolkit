@@ -134,8 +134,13 @@ def main(
         0 on success, 1 on error
     """
     try:
+        # Create output directory if it doesn't exist
+        os.makedirs(output_dir, exist_ok=True)
+        output_file = os.path.join(output_dir, output_file)
+
         if verbose:
             console.print("[bold blue]Starting parameter comparison...[/]")
+            console.print(f"[blue]Output directory:[/] {output_dir}")
             console.print(f"[blue]MDF file:[/] {mdf_file}")
             console.print(f"[blue]CHARMM file:[/] {charmm_file}")
         
