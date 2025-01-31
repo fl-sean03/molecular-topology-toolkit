@@ -1,7 +1,7 @@
 import logging
 from typing import Dict, List, Union
 
-def parse_mdf_file(file_path: str) -> Dict[int, Dict[str, Union[int, float, List[int]]]]:
+def parse_mdf_file(file_path: str) -> Dict[str, Dict[str, Union[str, List[str]]]]:
     """
     Parse an MDF file and extract atom information.
     
@@ -28,18 +28,20 @@ def parse_mdf_file(file_path: str) -> Dict[int, Dict[str, Union[int, float, List
                         logging.warning(f"Line {line_num}: Insufficient data columns")
                         continue
                     
-                    atom_id = int(parts[0])
-                    charge_group = int(parts[1])
+                    # Store the full atom ID as a string
+                    atom_id = parts[0]
+                    # Extract atom type from column 2
+                    atom_type = parts[1]
+                    # Get charge group from column 3
+                    charge_group = parts[2]
                     
-                    # Extract neighbor information (columns 11 onwards)
+                    # Extract neighbor information from the connections column (12)
                     neighbors = []
-                    for neighbor in parts[11:]:
-                        if neighbor.startswith(('-', '+')):
-                            # Handle periodic boundary conditions
-                            neighbor_id = int(neighbor[1:])
-                            neighbors.append(neighbor_id)
-                        else:
-                            neighbors.append(int(neighbor))
+                    if len(parts) >= 12:
+                        connections = parts[11].split()
+                        for neighbor in connections:
+                            if neighbor != '?':
+                                neighbors.append(neighbor)
                     
                     atoms_data[atom_id] = {
                         'charge_group': charge_group,
