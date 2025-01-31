@@ -76,9 +76,14 @@ def main():
         )
     elif args.command == 'charmm':
         setup_logging(verbose=args.verbose, log_file=args.log)
-        processor = CharmmProcessor()
-        processor.process_file(args.input_file, args.output_dir, json_format=args.json)
-        return 0
+        from .charmm_parser.parser import main as charmm_main
+        return charmm_main(
+            input_file=args.input_file,
+            output_dir=args.output_dir,
+            json_format=args.json,
+            verbose=args.verbose,
+            log_file=args.log
+        )
     elif args.command == 'check':
         setup_logging(verbose=args.verbose, log_file=args.log)
         from .parameter_checker.parameter_checker import main as checker_main
