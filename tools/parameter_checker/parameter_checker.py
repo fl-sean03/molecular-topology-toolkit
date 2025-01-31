@@ -72,6 +72,21 @@ def main(
         mdf_atoms = set(extract_unique_charge_groups(atoms_data).keys())
         bond_map, angle_map, dihedral_map = extract_topology(atoms_data)
         
+        # Normalize MDF angles
+        mdf_angles = set()
+        for angle in angle_map.keys():
+            A, B, C = angle
+            normalized_angle = (min(A, C), B, max(A, C))
+            mdf_angles.add(normalized_angle)
+            
+        # Normalize MDF dihedrals
+        mdf_dihedrals = set()
+        for dihedral in dihedral_map.keys():
+            dihedral_forward = dihedral
+            dihedral_reverse = dihedral[::-1]
+            normalized_dihedral = min(dihedral_forward, dihedral_reverse)
+            mdf_dihedrals.add(normalized_dihedral)
+        
         if verbose:
             console.print(f"[green]Found in MDF:[/]")
             console.print(f"  Atoms: {len(mdf_atoms)}")
@@ -85,12 +100,33 @@ def main(
         
         # Extract CHARMM parameters
         charmm_atoms = set(charmm_data['ATOMS']['Force Field Type'].unique()) if 'ATOMS' in charmm_data else set()
+        
+        # Extract and normalize bonds (already normalized by sorting)
         charmm_bonds = {tuple(sorted([row['Atom 1'], row['Atom 2']])) 
                        for _, row in charmm_data.get('BONDS', pd.DataFrame()).iterrows()}
-        charmm_angles = {tuple([row['Atom 1'], row['Atom 2'], row['Atom 3']])
-                        for _, row in charmm_data.get('ANGLES', pd.DataFrame()).iterrows()}
-        charmm_dihedrals = {tuple([row['Atom 1'], row['Atom 2'], row['Atom 3'], row['Atom 4']])
-                           for _, row in charmm_data.get('DIHEDRALS', pd.DataFrame()).iterrows()}
+        
+        # Extract and normalize angles
+        charmm_angles = set()
+        angles_df = charmm_data.get('ANGLES', pd.DataFrame())
+        for _, row in angles_df.iterrows():
+            A = row['Atom 1']
+            B = row['Atom 2']
+            C = row['Atom 3']
+            normalized_angle = (min(A, C), B, max(A, C))
+            charmm_angles.add(normalized_angle)
+            
+        # Extract and normalize dihedrals
+        charmm_dihedrals = set()
+        dihedrals_df = charmm_data.get('DIHEDRALS', pd.DataFrame())
+        for _, row in dihedrals_df.iterrows():
+            A = row['Atom 1']
+            B = row['Atom 2']
+            C = row['Atom 3']
+            D = row['Atom 4']
+            dihedral = (A, B, C, D)
+            reversed_dihedral = dihedral[::-1]
+            normalized_dihedral = min(dihedral, reversed_dihedral)
+            charmm_dihedrals.add(normalized_dihedral)
         
         if verbose:
             console.print(f"[green]Found in CHARMM:[/]")
@@ -100,11 +136,16 @@ def main(
             console.print(f"  Dihedrals: {len(charmm_dihedrals)}")
         
         # Compare parameters
+        missing_atoms = compare_atoms(mdf_atoms, charmm_atoms)
+        missing_bonds = compare_parameters(bond_map, charmm_bonds)
+        missing_angles = mdf_angles - charmm_angles
+        missing_dihedrals = mdf_dihedrals - charmm_dihedrals
+        
         results = {
-            'atoms': list(compare_atoms(mdf_atoms, charmm_atoms)),
-            'bonds': [list(x) for x in compare_parameters(bond_map, charmm_bonds)],
-            'angles': [list(x) for x in compare_parameters(angle_map, charmm_angles)],
-            'dihedrals': [list(x) for x in compare_parameters(dihedral_map, charmm_dihedrals)]
+            'atoms': list(missing_atoms),
+            'bonds': [list(bond) for bond in missing_bonds],
+            'angles': [list(angle) for angle in missing_angles],
+            'dihedrals': [list(dihedral) for dihedral in missing_dihedrals]
         }
         
         # Save results
