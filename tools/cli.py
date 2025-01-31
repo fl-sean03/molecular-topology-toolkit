@@ -20,15 +20,15 @@ def setup_logging(verbose=False, log_file=None):
         logging.basicConfig(level=level, format=log_format)
 
 def main():
-    parser = argparse.ArgumentParser(
-        description='Molecular topology file parser tools'
-    )
-
     try:
+        parser = argparse.ArgumentParser(
+            description='Molecular topology file parser tools'
+        )
+
         subparsers = parser.add_subparsers(dest='command', help='Parser commands')
     
-    # MDF Parser
-    mdf_parser = subparsers.add_parser('mdf', help='Parse MDF files')
+        # MDF Parser
+        mdf_parser = subparsers.add_parser('mdf', help='Parse MDF files')
     mdf_parser.add_argument('input_file', help='Path to the .mdf file')
     mdf_parser.add_argument('-o', '--output', default='topology.csv', 
                            help='Output file name')
