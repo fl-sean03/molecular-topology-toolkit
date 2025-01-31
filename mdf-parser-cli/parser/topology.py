@@ -1,7 +1,7 @@
 from typing import Dict, Set, Tuple, List
 import logging
 
-def extract_topology(atoms_data: Dict[int, Dict]) -> Dict[str, Set[Tuple]]:
+def extract_topology(atoms_data: Dict[str, Dict]) -> Tuple[Set[Tuple], Set[Tuple], Set[Tuple]]:
     """
     Extract bonds, angles, and dihedrals from atom connectivity data.
     
@@ -9,7 +9,7 @@ def extract_topology(atoms_data: Dict[int, Dict]) -> Dict[str, Set[Tuple]]:
         atoms_data: Dictionary of atom data from parse_mdf_file()
         
     Returns:
-        Dictionary containing sets of bonds, angles, and dihedrals
+        Tuple of (bonds, angles, dihedrals) sets
     """
     bonds = set()
     angles = set()
@@ -43,8 +43,4 @@ def extract_topology(atoms_data: Dict[int, Dict]) -> Dict[str, Set[Tuple]]:
     
     logging.debug(f"Extracted {len(bonds)} bonds, {len(angles)} angles, {len(dihedrals)} dihedrals")
     
-    return {
-        'bonds': bonds,
-        'angles': angles,
-        'dihedrals': dihedrals
-    }
+    return bonds, angles, dihedrals

@@ -50,19 +50,21 @@ def main():
             console.print(f"[green]Successfully parsed {len(atoms_data)} atoms[/]")
 
         # Extract topology
-        topology = extract_topology(atoms_data)
+        bonds, angles, dihedrals = extract_topology(atoms_data)
         
         if args.verbose:
             console.print(f"[green]Extracted topology:[/]")
-            console.print(f"  Bonds: {len(topology['bonds'])}")
-            console.print(f"  Angles: {len(topology['angles'])}")
-            console.print(f"  Dihedrals: {len(topology['dihedrals'])}")
+            console.print(f"  Bonds: {len(bonds)}")
+            console.print(f"  Angles: {len(angles)}")
+            console.print(f"  Dihedrals: {len(dihedrals)}")
 
         # Save output
         save_output(
             file_name=args.output,
             atoms=atoms_data,
-            topology=topology,
+            bonds=bonds,
+            angles=angles,
+            dihedrals=dihedrals,
             json_format=args.json,
             separate_files=args.separate
         )

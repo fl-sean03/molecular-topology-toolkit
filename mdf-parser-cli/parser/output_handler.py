@@ -7,7 +7,9 @@ from typing import Dict, Set, Tuple
 def save_output(
     file_name: str,
     atoms: Dict,
-    topology: Dict[str, Set[Tuple]],
+    bonds: Set[Tuple],
+    angles: Set[Tuple],
+    dihedrals: Set[Tuple],
     json_format: bool = False,
     separate_files: bool = False
 ) -> None:
@@ -26,10 +28,10 @@ def save_output(
     # Convert atom data to DataFrame
     atoms_df = pd.DataFrame.from_dict(atoms, orient='index')
     
-    # Convert topology components to DataFrames
-    bonds_df = pd.DataFrame(list(topology['bonds']), columns=['Atom1', 'Atom2'])
-    angles_df = pd.DataFrame(list(topology['angles']), columns=['Atom1', 'Atom2', 'Atom3'])
-    dihedrals_df = pd.DataFrame(list(topology['dihedrals']), columns=['Atom1', 'Atom2', 'Atom3', 'Atom4'])
+    # Convert topology components to DataFrames with descriptive columns
+    bonds_df = pd.DataFrame(list(bonds), columns=['Group1', 'Group2'])
+    angles_df = pd.DataFrame(list(angles), columns=['Group1', 'Group2', 'Group3'])
+    dihedrals_df = pd.DataFrame(list(dihedrals), columns=['Group1', 'Group2', 'Group3', 'Group4'])
     
     if json_format:
         output_data = {
