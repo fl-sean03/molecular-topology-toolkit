@@ -77,7 +77,7 @@ def main():
     elif args.command == 'charmm':
         setup_logging(verbose=args.verbose, log_file=args.log)
         processor = CharmmProcessor()
-        processor.process_file(args.input_file, args.output_dir)
+        processor.process_file(args.input_file, args.output_dir, json_format=args.json)
         return 0
     elif args.command == 'check':
         setup_logging(verbose=args.verbose, log_file=args.log)

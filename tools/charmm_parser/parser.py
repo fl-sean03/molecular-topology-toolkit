@@ -32,39 +32,7 @@ class CharmmProcessor:
         
         return self.current_data
 
-    def search(self, query: str, section: str = None) -> Dict[str, pd.DataFrame]:
-        """Search through parsed data based on query and section"""
-        if not self.current_data:
-            return {}
 
-        results = {}
-        sections_to_search = [section] if section and section != 'all' else self.current_data.keys()
-
-        for sect in sections_to_search:
-            if sect not in self.current_data:
-                continue
-
-            df = self.current_data[sect]
-            
-            # Search through all columns
-            mask = pd.Series(False, index=df.index)
-            for column in df.columns:
-                # Convert column to string for searching
-                str_col = df[column].astype(str)
-                mask |= str_col.str.contains(query, case=False, na=False)
-            
-            if mask.any():
-                results[sect] = df[mask]
-
-        return results
-
-    def get_section(self, section: str) -> Optional[pd.DataFrame]:
-        """Get a specific section of parsed data"""
-        return self.current_data.get(section)
-
-    def get_all_data(self) -> Dict[str, pd.DataFrame]:
-        """Get all parsed data"""
-        return self.current_data
 
 def main(input_file: str, output_dir: str = '.', json_format: bool = False, verbose: bool = False, log_file: Optional[str] = None) -> int:
     """

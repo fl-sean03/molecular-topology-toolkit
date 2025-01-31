@@ -66,9 +66,6 @@ from tools.charmm_parser import CharmmProcessor
 
 processor = CharmmProcessor()
 data = processor.process_file("input.prm", "output_dir")
-
-# Search through parsed data
-results = processor.search("CH3", section="BONDS")
 ```
 
 ### MDF Parser
