@@ -3,6 +3,7 @@ CHARMM parameter file section parsers.
 Contains functions for parsing different sections of CHARMM parameter files.
 """
 
+import os
 import pandas as pd
 import re
 from typing import List, Dict
