@@ -11,32 +11,34 @@ from .mdf_parser import parse_mdf_file
 
 console = Console()
 
-def setup_logging(log_file=None):
-    """Configure logging based on command line options"""
+def setup_logging(verbose=False, log_file=None):
+    """Configure logging based on parameters"""
     log_format = "%(levelname)s: %(message)s"
+    level = logging.DEBUG if verbose else logging.ERROR
     if log_file:
         logging.basicConfig(
-            level=logging.DEBUG,
+            level=level,
             format=log_format,
             filename=log_file,
             filemode='w'
         )
     else:
-        logging.basicConfig(level=logging.ERROR, format=log_format)
+        logging.basicConfig(level=level, format=log_format)
 
-def main():
-    parser = argparse.ArgumentParser(description='Parse MDF files and extract molecular topology.')
-    parser.add_argument('input_file', help='Path to the .mdf file')
-    parser.add_argument('-o', '--output', default='topology.csv', help='Output file name')
-    parser.add_argument('--json', action='store_true', help='Output as JSON instead of CSV')
-    parser.add_argument('--separate', action='store_true', help='Save separate files for each component')
-    parser.add_argument('--verbose', action='store_true', help='Enable detailed output')
-    parser.add_argument('--log', help='Save logs to specified file')
-
-    args = parser.parse_args()
-
+def main(input_file, output_file='topology.csv', json_format=False, separate_files=False, verbose=False, log_file=None):
+    """
+    Main function for parsing MDF files and extracting molecular topology.
+    
+    Args:
+        input_file: Path to the .mdf file
+        output_file: Output file name (default: topology.csv)
+        json_format: If True, output as JSON instead of CSV
+        separate_files: If True, save separate files for each component
+        verbose: Enable detailed output
+        log_file: Save logs to specified file
+    """
     # Configure logging
-    setup_logging(args.log)
+    setup_logging(verbose, log_file)
 
     try:
         if args.verbose:
