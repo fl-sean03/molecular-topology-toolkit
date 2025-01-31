@@ -9,7 +9,7 @@ import sys
 from parser.mdf_parser import main as mdf_main
 from parser.charmm_parser import CharmmProcessor
 
-def charmm_main():
+def charmm_main(args):
     processor = CharmmProcessor()
     processor.process_file(args.input_file, args.output_dir)
     return 0
@@ -51,7 +51,7 @@ def main():
     if args.command == 'mdf':
         return mdf_main()
     elif args.command == 'charmm':
-        return charmm_main()
+        return charmm_main(args)
     else:
         parser.print_help()
         return 1
