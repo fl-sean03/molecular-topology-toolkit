@@ -16,8 +16,6 @@ setup(
     entry_points={
         'console_scripts': [
             'topology-parser=tools.cli:main',
-            'mdf-parser=tools.mdf_parser.parser:main',
-            'charmm-parser=tools.charmm_parser.parser:main',
         ],
     },
     author='Your Name',

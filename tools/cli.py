@@ -8,7 +8,7 @@ import argparse
 import sys
 import logging
 from .mdf_parser.parser import main as mdf_main
-from .charmm_parser.parser import main as charmm_main
+from .charmm_parser.parser import CharmmProcessor, main as charmm_main
 
 def setup_logging(verbose=False, log_file=None):
     """Configure logging based on command line options"""
@@ -64,13 +64,9 @@ def main():
         )
     elif args.command == 'charmm':
         setup_logging(verbose=args.verbose, log_file=args.log)
-        return charmm_main(
-            input_file=args.input_file,
-            output_dir=args.output_dir,
-            json_format=args.json,
-            verbose=args.verbose,
-            log_file=args.log
-        )
+        processor = CharmmProcessor()
+        processor.process_file(args.input_file, args.output_dir)
+        return 0
     else:
         parser.print_help()
         return 1
