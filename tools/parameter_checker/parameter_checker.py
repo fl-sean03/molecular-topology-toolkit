@@ -32,19 +32,35 @@ def compare_parameters(mdf_params: Dict, charmm_params: Dict, charmm_df: pd.Data
     results = []
     for param_key in mdf_params.keys():
         param_str = '-'.join(param_key)
-        # Create conditions for each atom in the parameter
-        conditions = [
+        param_rev = '-'.join(param_key[::-1])  # Reversed parameter string
+        
+        # Try both forward and reverse orientations
+        conditions_fwd = [
             (charmm_df[f'Atom {i+1}'] == atom) 
             for i, atom in enumerate(param_key)
         ]
-        # Combine all conditions
-        match = charmm_df[pd.concat(conditions, axis=1).all(axis=1)]
+        conditions_rev = [
+            (charmm_df[f'Atom {i+1}'] == atom) 
+            for i, atom in enumerate(param_key[::-1])
+        ]
+        
+        # Check both orientations
+        match_fwd = charmm_df[pd.concat(conditions_fwd, axis=1).all(axis=1)]
+        match_rev = charmm_df[pd.concat(conditions_rev, axis=1).all(axis=1)]
+        
+        # Parameter is found if either orientation matches
+        found = not (match_fwd.empty and match_rev.empty)
+        line_number = None
+        if not match_fwd.empty:
+            line_number = int(match_fwd['Line Number'].iloc[0])
+        elif not match_rev.empty:
+            line_number = int(match_rev['Line Number'].iloc[0])
         
         results.append({
             'parameter_type': param_type,
             'parameters': param_str,
-            'found': not match.empty,
-            'line_number': int(match['Line Number'].iloc[0]) if not match.empty else None
+            'found': found,
+            'line_number': line_number
         })
     return results
 
