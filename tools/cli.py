@@ -50,6 +50,18 @@ def main():
                               help='Enable detailed output')
     charmm_parser.add_argument('--log', help='Save logs to specified file')
 
+    # Parameter Checker
+    checker_parser = subparsers.add_parser('check', help='Check parameters between MDF and CHARMM files')
+    checker_parser.add_argument('mdf_file', help='Path to the .mdf file')
+    checker_parser.add_argument('charmm_file', help='Path to the CHARMM parameter file')
+    checker_parser.add_argument('-o', '--output', default='missing_parameters.csv',
+                              help='Output file name')
+    checker_parser.add_argument('--json', action='store_true',
+                              help='Output as JSON instead of CSV')
+    checker_parser.add_argument('--verbose', action='store_true',
+                              help='Enable detailed output')
+    checker_parser.add_argument('--log', help='Save logs to specified file')
+
     args = parser.parse_args()
 
     if args.command == 'mdf':
@@ -67,6 +79,17 @@ def main():
         processor = CharmmProcessor()
         processor.process_file(args.input_file, args.output_dir)
         return 0
+    elif args.command == 'check':
+        setup_logging(verbose=args.verbose, log_file=args.log)
+        from .parameter_checker.parameter_checker import main as checker_main
+        return checker_main(
+            mdf_file=args.mdf_file,
+            charmm_file=args.charmm_file,
+            output_file=args.output,
+            json_format=args.json,
+            verbose=args.verbose,
+            log_file=args.log
+        )
     else:
         parser.print_help()
         return 1
