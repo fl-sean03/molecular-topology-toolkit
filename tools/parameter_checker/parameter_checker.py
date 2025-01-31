@@ -113,6 +113,8 @@ def main(
     mdf_file: str,
     charmm_file: str, 
     output_file: str = 'parameter_check.csv',
+    output_dir: str = '.',
+    save_all: bool = False,
     json_format: bool = False,
     verbose: bool = False,
     log_file: str = None
@@ -137,9 +139,13 @@ def main(
             console.print(f"[blue]MDF file:[/] {mdf_file}")
             console.print(f"[blue]CHARMM file:[/] {charmm_file}")
         
-        # Parse MDF file
+        # Parse MDF file and optionally save results
         logging.info("Parsing MDF file...")
+        mdf_output = os.path.join(output_dir, 'mdf_topology.csv') if save_all else None
         atoms_data = parse_mdf_file(mdf_file)
+        if save_all:
+            from ..mdf_parser.output_handler import save_output
+            save_output(mdf_output, atoms_data, json_format=json_format)
         mdf_atoms = set(extract_unique_charge_groups(atoms_data).keys())
         bond_map, angle_map, dihedral_map = extract_topology(atoms_data)
         
@@ -165,9 +171,16 @@ def main(
             console.print(f"  Angles: {len(angle_map)}")
             console.print(f"  Dihedrals: {len(dihedral_map)}")
         
-        # Parse CHARMM file
+        # Parse CHARMM file and optionally save results
         logging.info("Parsing CHARMM parameter file...")
+        charmm_output_dir = os.path.join(output_dir, 'charmm') if save_all else None
+        if save_all:
+            os.makedirs(charmm_output_dir, exist_ok=True)
         charmm_data = parse_charmm_parameter_file(charmm_file)
+        if save_all:
+            from ..charmm_parser.parser import CharmmProcessor
+            processor = CharmmProcessor()
+            processor.process_file(charmm_file, charmm_output_dir, json_format=json_format)
         
         # Extract CHARMM parameters
         charmm_atoms = set(charmm_data['ATOMS']['Force Field Type'].unique()) if 'ATOMS' in charmm_data else set()

@@ -57,6 +57,10 @@ def main():
         checker_parser.add_argument('charmm_file', help='Path to the CHARMM parameter file')
         checker_parser.add_argument('-o', '--output', default='missing_parameters.csv',
                                   help='Output file name')
+        checker_parser.add_argument('-d', '--output-dir', default='.',
+                                  help='Output directory for all files')
+        checker_parser.add_argument('--save-all', action='store_true',
+                                  help='Save all intermediate files from MDF and CHARMM parsing')
         checker_parser.add_argument('--json', action='store_true',
                                   help='Output as JSON instead of CSV')
         checker_parser.add_argument('--verbose', action='store_true',
@@ -92,6 +96,8 @@ def main():
                 mdf_file=args.mdf_file,
                 charmm_file=args.charmm_file,
                 output_file=args.output,
+                output_dir=args.output_dir,
+                save_all=args.save_all,
                 json_format=args.json,
                 verbose=args.verbose,
                 log_file=args.log
