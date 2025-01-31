@@ -32,29 +32,40 @@ def compare_parameters(mdf_params: Dict, charmm_params: Dict, charmm_df: pd.Data
     results = []
     for param_key in mdf_params.keys():
         param_str = '-'.join(param_key)
-        param_rev = '-'.join(param_key[::-1])  # Reversed parameter string
-        
-        # Try both forward and reverse orientations
-        conditions_fwd = [
-            (charmm_df[f'Atom {i+1}'] == atom) 
-            for i, atom in enumerate(param_key)
-        ]
-        conditions_rev = [
-            (charmm_df[f'Atom {i+1}'] == atom) 
-            for i, atom in enumerate(param_key[::-1])
-        ]
-        
-        # Check both orientations
-        match_fwd = charmm_df[pd.concat(conditions_fwd, axis=1).all(axis=1)]
-        match_rev = charmm_df[pd.concat(conditions_rev, axis=1).all(axis=1)]
-        
-        # Parameter is found if either orientation matches
-        found = not (match_fwd.empty and match_rev.empty)
+        found = False
         line_number = None
-        if not match_fwd.empty:
-            line_number = int(match_fwd['Line Number'].iloc[0])
-        elif not match_rev.empty:
-            line_number = int(match_rev['Line Number'].iloc[0])
+        
+        # Generate all possible orientations based on parameter type
+        orientations = []
+        if param_type == 'bond':
+            # Bonds: A-B or B-A
+            orientations = [param_key, param_key[::-1]]
+        elif param_type == 'angle':
+            # Angles: A-B-C or C-B-A (B must stay in middle)
+            orientations = [param_key, (param_key[2], param_key[1], param_key[0])]
+        elif param_type == 'dihedral':
+            # Dihedrals: A-B-C-D or D-C-B-A
+            orientations = [param_key, param_key[::-1]]
+        elif param_type == 'improper':
+            # Impropers: A-B-C-D, where B is the central atom
+            # All permutations of A,C,D around B are equivalent
+            from itertools import permutations
+            central = param_key[1]  # B is central
+            others = [param_key[0], param_key[2], param_key[3]]
+            orientations = [(a, central, b, c) for a, b, c in permutations(others)]
+        
+        # Try all valid orientations
+        for orientation in orientations:
+            conditions = [
+                (charmm_df[f'Atom {i+1}'] == atom) 
+                for i, atom in enumerate(orientation)
+            ]
+            match = charmm_df[pd.concat(conditions, axis=1).all(axis=1)]
+            
+            if not match.empty:
+                found = True
+                line_number = int(match['Line Number'].iloc[0])
+                break
         
         results.append({
             'parameter_type': param_type,
