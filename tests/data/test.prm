@@ -1,0 +1,23 @@
+! Test CHARMM parameter file
+
+ATOMS
+MASS   1  H      1.008   ! Hydrogen
+MASS   2  C     12.011   ! Carbon
+MASS   3  O     15.999   ! Oxygen
+
+BONDS
+H  C    340.0   1.090   ! Aliphatic CH
+C  C    310.0   1.526   ! Aliphatic CC
+C  O    360.0   1.410   ! Alcohol CO
+
+ANGLES
+H  C  H     35.0    109.5   ! Aliphatic CH2
+H  C  C     45.0    110.0   ! Aliphatic CH-C
+C  C  O     50.0    108.0   ! Alcohol C-C-O
+
+DIHEDRALS
+H  C  C  H     1.40    3     0.0   ! Aliphatic HCCH
+H  C  C  O     0.20    3     0.0   ! Alcohol HCCO
+
+IMPROPER
+C  H  H  O    45.0     0     0.0   ! Maintain planarity
