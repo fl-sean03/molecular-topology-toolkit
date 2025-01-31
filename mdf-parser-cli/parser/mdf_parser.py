@@ -50,3 +50,13 @@ def parse_mdf_file(file_path: str) -> Dict[str, Dict[str, Union[str, List[str]]]
     
     logging.debug(f"Successfully parsed {len(atoms_data)} atoms")
     return atoms_data
+
+def extract_unique_charge_groups(atoms_data: Dict) -> Dict[str, List[str]]:
+    """Extract unique force field types (charge groups) and their atom identifiers"""
+    charge_group_to_atoms = {}
+    for atom_id, info in atoms_data.items():
+        charge_group = info["charge_group"]
+        if charge_group not in charge_group_to_atoms:
+            charge_group_to_atoms[charge_group] = []
+        charge_group_to_atoms[charge_group].append(atom_id)
+    return charge_group_to_atoms

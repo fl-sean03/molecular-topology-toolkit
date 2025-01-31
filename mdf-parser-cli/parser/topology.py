@@ -1,19 +1,22 @@
-from typing import Dict, Set, Tuple, List
+from typing import Dict, Tuple, List
 import logging
 
-def extract_topology(atoms_data: Dict[str, Dict]) -> Tuple[Set[Tuple], Set[Tuple], Set[Tuple]]:
+def extract_topology(atoms_data: Dict[str, Dict]) -> Tuple[Dict, Dict, Dict]:
     """
-    Extract bonds, angles, and dihedrals from atom connectivity data.
+    Extract bonds, angles, and dihedrals from atom connectivity data with their atom identifiers.
     
     Args:
         atoms_data: Dictionary of atom data from parse_mdf_file()
         
     Returns:
-        Tuple of (bonds, angles, dihedrals) sets
+        Tuple of (bond_map, angle_map, dihedral_map) dictionaries
     """
     bonds_set = set()
+    bond_map = {}
     angles_set = set()
+    angle_map = {}
     dihedrals_set = set()
+    dihedral_map = {}
 
     # Extract bonds
     for atomA, dataA in atoms_data.items():
@@ -24,6 +27,12 @@ def extract_topology(atoms_data: Dict[str, Dict]) -> Tuple[Set[Tuple], Set[Tuple
             groupB = atoms_data[nbr_label]["charge_group"]
             bond_tup = tuple(sorted([groupA, groupB]))
             bonds_set.add(bond_tup)
+            
+            # Store atom identifier pairs for bonds
+            bond_key = bond_tup
+            if bond_key not in bond_map:
+                bond_map[bond_key] = []
+            bond_map[bond_key].append(f"{atomA}-{nbr_label}")
 
     # Extract angles
     for b_label, b_info in atoms_data.items():
@@ -40,6 +49,11 @@ def extract_topology(atoms_data: Dict[str, Dict]) -> Tuple[Set[Tuple], Set[Tuple
                 sorted_ends = sorted([groupA, groupC])
                 angle_trip = (sorted_ends[0], groupB, sorted_ends[1])
                 angles_set.add(angle_trip)
+
+                # Store atom identifier triplets for angles
+                if angle_trip not in angle_map:
+                    angle_map[angle_trip] = []
+                angle_map[angle_trip].append(f"{a_label}-{b_label}-{c_label}")
 
     # Extract dihedrals
     bond_pairs = set()
@@ -72,6 +86,11 @@ def extract_topology(atoms_data: Dict[str, Dict]) -> Tuple[Set[Tuple], Set[Tuple
                 dihedral_tup = min(forward, reverse)
                 dihedrals_set.add(dihedral_tup)
 
+                # Store atom identifier quartets for dihedrals
+                if dihedral_tup not in dihedral_map:
+                    dihedral_map[dihedral_tup] = []
+                dihedral_map[dihedral_tup].append(f"{a_label}-{b_label}-{c_label}-{d_label}")
+
     logging.debug(f"Extracted {len(bonds_set)} bonds, {len(angles_set)} angles, {len(dihedrals_set)} dihedrals")
     
-    return bonds_set, angles_set, dihedrals_set
+    return bond_map, angle_map, dihedral_map
