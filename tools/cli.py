@@ -29,16 +29,16 @@ def main():
     
         # MDF Parser
         mdf_parser = subparsers.add_parser('mdf', help='Parse MDF files')
-    mdf_parser.add_argument('input_file', help='Path to the .mdf file')
-    mdf_parser.add_argument('-o', '--output', default='topology.csv', 
-                           help='Output file name')
-    mdf_parser.add_argument('--json', action='store_true',
-                           help='Output as JSON instead of CSV')
-    mdf_parser.add_argument('--separate', action='store_true',
-                           help='Save separate files for each component')
-    mdf_parser.add_argument('--verbose', action='store_true',
-                           help='Enable detailed output')
-    mdf_parser.add_argument('--log', help='Save logs to specified file')
+        mdf_parser.add_argument('input_file', help='Path to the .mdf file')
+        mdf_parser.add_argument('-o', '--output', default='topology.csv', 
+                               help='Output file name')
+        mdf_parser.add_argument('--json', action='store_true',
+                               help='Output as JSON instead of CSV')
+        mdf_parser.add_argument('--separate', action='store_true',
+                               help='Save separate files for each component')
+        mdf_parser.add_argument('--verbose', action='store_true',
+                               help='Enable detailed output')
+        mdf_parser.add_argument('--log', help='Save logs to specified file')
 
     # CHARMM Parser
     charmm_parser = subparsers.add_parser('charmm', help='Parse CHARMM parameter files')
