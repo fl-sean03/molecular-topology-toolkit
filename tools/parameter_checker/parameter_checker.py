@@ -29,7 +29,7 @@ def compare_atoms(mdf_atoms: Set[str], charmm_atoms: Set[str], charmm_data: pd.D
 
 def compare_parameters(mdf_params: Dict, charmm_params: Dict, charmm_df: pd.DataFrame, param_type: str) -> List[Dict]:
     """
-    Compare parameter tuples between MDF and CHARMM data.
+    Compare parameter tuples between MDF and CHARMM data, handling wildcards ('X').
     
     Args:
         mdf_params: Dictionary of parameters from MDF file
@@ -75,10 +75,16 @@ def compare_parameters(mdf_params: Dict, charmm_params: Dict, charmm_df: pd.Data
         
         # Try all valid orientations
         for orientation in orientations:
-            conditions = [
-                (charmm_df[f'Atom {i+1}'] == atom) 
-                for i, atom in enumerate(orientation)
-            ]
+            # Create conditions that match either the exact atom type or 'X'
+            conditions = []
+            for i, atom in enumerate(orientation):
+                atom_col = f'Atom {i+1}'
+                # Match either the exact atom type or 'X'
+                conditions.append(
+                    (charmm_df[atom_col] == atom) | (charmm_df[atom_col] == 'X')
+                )
+            
+            # Find matches considering wildcards
             match = charmm_df[pd.concat(conditions, axis=1).all(axis=1)]
             
             if not match.empty:
