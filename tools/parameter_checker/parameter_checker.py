@@ -84,7 +84,7 @@ def main(
         charmm_data = parse_charmm_parameter_file(charmm_file)
         
         # Extract CHARMM parameters
-        charmm_atoms = set(df['Force Field Type'].unique()) if 'ATOMS' in charmm_data else set()
+        charmm_atoms = set(charmm_data['ATOMS']['Force Field Type'].unique()) if 'ATOMS' in charmm_data else set()
         charmm_bonds = {tuple(sorted([row['Atom 1'], row['Atom 2']])) 
                        for _, row in charmm_data.get('BONDS', pd.DataFrame()).iterrows()}
         charmm_angles = {tuple([row['Atom 1'], row['Atom 2'], row['Atom 3']])
