@@ -20,9 +20,10 @@ def setup_logging(verbose=False, log_file=None):
         logging.basicConfig(level=level, format=log_format)
 
 def main():
-    parser = argparse.ArgumentParser(
-        description='Molecular topology file parser tools'
-    )
+    try:
+        parser = argparse.ArgumentParser(
+            description='Molecular topology file parser tools'
+        )
     
     subparsers = parser.add_subparsers(dest='command', help='Parser commands')
     
@@ -97,6 +98,10 @@ def main():
         )
     else:
         parser.print_help()
+        return 1
+    
+    except Exception as e:
+        logging.error(f"Unexpected error: {str(e)}")
         return 1
 
 if __name__ == '__main__':

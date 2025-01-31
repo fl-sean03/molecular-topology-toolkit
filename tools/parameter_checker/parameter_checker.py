@@ -28,12 +28,31 @@ def compare_atoms(mdf_atoms: Set[str], charmm_atoms: Set[str], charmm_data: pd.D
     return results
 
 def compare_parameters(mdf_params: Dict, charmm_params: Dict, charmm_df: pd.DataFrame, param_type: str) -> List[Dict]:
-    """Compare parameter tuples between MDF and CHARMM data."""
+    """
+    Compare parameter tuples between MDF and CHARMM data.
+    
+    Args:
+        mdf_params: Dictionary of parameters from MDF file
+        charmm_params: Dictionary of parameters from CHARMM file
+        charmm_df: DataFrame containing CHARMM parameters
+        param_type: Type of parameter being compared ('bond', 'angle', etc.)
+        
+    Returns:
+        List of dictionaries containing comparison results
+    """
+    if not mdf_params or not charmm_params:
+        logging.warning(f"Empty parameter set for {param_type} comparison")
+        return []
+        
     results = []
     for param_key in mdf_params.keys():
         param_str = '-'.join(param_key)
         found = False
         line_number = None
+        
+        if not all(isinstance(x, str) for x in param_key):
+            logging.warning(f"Invalid parameter key format: {param_key}")
+            continue
         
         # Generate all possible orientations based on parameter type
         orientations = []

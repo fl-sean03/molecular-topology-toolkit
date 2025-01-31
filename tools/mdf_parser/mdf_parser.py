@@ -10,8 +10,17 @@ def parse_mdf_file(file_path: str) -> Dict[str, Dict[str, Union[str, List[str]]]
         
     Returns:
         Dictionary mapping atom IDs to their properties
+        
+    Raises:
+        FileNotFoundError: If the file doesn't exist
+        ValueError: If the file is empty or malformed
+        RuntimeError: If parsing fails
     """
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(f"MDF file not found: {file_path}")
+        
     atoms_data = {}
+    line_number = 0
 
     try:
         with open(file_path, "r") as f:

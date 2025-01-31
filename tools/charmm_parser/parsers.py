@@ -206,9 +206,25 @@ def parse_atoms_section(lines: List[str], start_line: int = 0) -> pd.DataFrame:
 def parse_charmm_parameter_file(filepath: str) -> Dict[str, pd.DataFrame]:
     """
     Parse a full CHARMM parameter file into individual sections while preserving global line numbers.
+    
+    Args:
+        filepath: Path to the CHARMM parameter file
+        
+    Returns:
+        Dictionary mapping section names to pandas DataFrames
+        
+    Raises:
+        FileNotFoundError: If the file doesn't exist
+        ValueError: If the file is empty or malformed
     """
+    if not os.path.exists(filepath):
+        raise FileNotFoundError(f"CHARMM parameter file not found: {filepath}")
+        
     # Read the file
     lines = read_file(filepath)
+    
+    if not lines:
+        raise ValueError("Empty CHARMM parameter file")
     
     # Define section patterns
     section_patterns = {
