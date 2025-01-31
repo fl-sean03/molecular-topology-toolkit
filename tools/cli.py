@@ -63,42 +63,42 @@ def main():
                                   help='Enable detailed output')
         checker_parser.add_argument('--log', help='Save logs to specified file')
 
-    args = parser.parse_args()
+        args = parser.parse_args()
 
-    if args.command == 'mdf':
-        setup_logging(verbose=args.verbose, log_file=args.log)
-        return mdf_main(
-            input_file=args.input_file,
-            output_file=args.output,
-            json_format=args.json,
-            separate_files=args.separate,
-            verbose=args.verbose,
-            log_file=args.log
-        )
-    elif args.command == 'charmm':
-        setup_logging(verbose=args.verbose, log_file=args.log)
-        from .charmm_parser.parser import main as charmm_main
-        return charmm_main(
-            input_file=args.input_file,
-            output_dir=args.output_dir,
-            json_format=args.json,
-            verbose=args.verbose,
-            log_file=args.log
-        )
-    elif args.command == 'check':
-        setup_logging(verbose=args.verbose, log_file=args.log)
-        from .parameter_checker.parameter_checker import main as checker_main
-        return checker_main(
-            mdf_file=args.mdf_file,
-            charmm_file=args.charmm_file,
-            output_file=args.output,
-            json_format=args.json,
-            verbose=args.verbose,
-            log_file=args.log
-        )
-    else:
-        parser.print_help()
-        return 1
+        if args.command == 'mdf':
+            setup_logging(verbose=args.verbose, log_file=args.log)
+            return mdf_main(
+                input_file=args.input_file,
+                output_file=args.output,
+                json_format=args.json,
+                separate_files=args.separate,
+                verbose=args.verbose,
+                log_file=args.log
+            )
+        elif args.command == 'charmm':
+            setup_logging(verbose=args.verbose, log_file=args.log)
+            from .charmm_parser.parser import main as charmm_main
+            return charmm_main(
+                input_file=args.input_file,
+                output_dir=args.output_dir,
+                json_format=args.json,
+                verbose=args.verbose,
+                log_file=args.log
+            )
+        elif args.command == 'check':
+            setup_logging(verbose=args.verbose, log_file=args.log)
+            from .parameter_checker.parameter_checker import main as checker_main
+            return checker_main(
+                mdf_file=args.mdf_file,
+                charmm_file=args.charmm_file,
+                output_file=args.output,
+                json_format=args.json,
+                verbose=args.verbose,
+                log_file=args.log
+            )
+        else:
+            parser.print_help()
+            return 1
     
     except Exception as e:
         logging.error(f"Unexpected error: {str(e)}")
