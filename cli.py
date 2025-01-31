@@ -9,6 +9,11 @@ import sys
 from parser.mdf_parser import main as mdf_main
 from parser.charmm_parser import CharmmProcessor
 
+def charmm_main():
+    processor = CharmmProcessor()
+    processor.process_file(args.input_file, args.output_dir)
+    return 0
+
 def main():
     parser = argparse.ArgumentParser(
         description='Molecular topology file parser tools'

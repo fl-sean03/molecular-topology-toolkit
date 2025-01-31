@@ -8,6 +8,7 @@ from rich.console import Console
 from parser.topology import extract_topology
 from parser.output_handler import save_output
 from parser.charmm_parser import CharmmProcessor
+from parser.mdf_parser import parse_mdf_file
 
 console = Console()
 
