@@ -41,20 +41,20 @@ def main(input_file, output_file='topology.csv', json_format=False, separate_fil
     setup_logging(verbose, log_file)
 
     try:
-        if args.verbose:
+        if verbose:
             logging.getLogger().setLevel(logging.DEBUG)
             console.print("[bold blue]Starting MDF file parsing...[/]")
 
         # Parse the MDF file
-        atoms_data = parse_mdf_file(args.input_file)
+        atoms_data = parse_mdf_file(input_file)
         
-        if args.verbose:
+        if verbose:
             console.print(f"[green]Successfully parsed {len(atoms_data)} atoms[/]")
 
         # Extract topology
         bonds, angles, dihedrals = extract_topology(atoms_data)
         
-        if args.verbose:
+        if verbose:
             console.print(f"[green]Extracted topology:[/]")
             console.print(f"  Bonds: {len(bonds)}")
             console.print(f"  Angles: {len(angles)}")
@@ -62,18 +62,18 @@ def main(input_file, output_file='topology.csv', json_format=False, separate_fil
 
         # Save output
         save_output(
-            file_name=args.output,
+            file_name=output_file,
             atoms_data=atoms_data,
-            json_format=args.json,
-            separate_files=args.separate
+            json_format=json_format,
+            separate_files=separate_files
         )
 
-        if args.verbose:
+        if verbose:
             console.print("[bold green]Processing complete![/]")
 
     except Exception as e:
         logging.error(f"Error processing file: {str(e)}")
-        if args.verbose:
+        if verbose:
             console.print(f"[bold red]Error:[/] {str(e)}")
         return 1
 
