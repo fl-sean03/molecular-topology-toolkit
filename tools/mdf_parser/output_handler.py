@@ -61,7 +61,11 @@ def save_output(
     if json_format:
         output_data = df_final.to_dict(orient='records')
         with open(f"{base_name}.json", 'w') as f:
-            json.dump(output_data, f, indent=2)
+            try:
+                json.dump(output_data, f, indent=2)
+            except (TypeError, ValueError) as e:
+                logging.error(f"Error saving JSON output: {str(e)}")
+                raise
         logging.info(f"Saved JSON output to {base_name}.json")
         
     elif separate_files:
