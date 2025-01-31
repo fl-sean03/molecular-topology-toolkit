@@ -44,7 +44,7 @@ source venv/bin/activate
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/mdf-parser-cli.git
+git clone https://github.com/fl-sean03/mdf-parser-cli.git
 cd mdf-parser-cli
 ```
 
@@ -91,16 +91,6 @@ python mdf_parser.py input.mdf --log logs/parser.log
 ```
 
 Logs will be saved in the `logs/` directory.
-
-## Unit Tests
-
-To run the unit tests:
-
-```bash
-python -m unittest discover tests/
-```
-
-Ensure all tests pass to verify that the codebase is functioning correctly.
 
 ## Building Executable
 
@@ -171,7 +161,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Authors
 
-- Your Name - [@yourusername](https://github.com/yourusername) - your.email@example.com
+- Sean Florez - [@fl-sean03](https://github.com/fl-sean03)
 
 ## Acknowledgments
 
