@@ -1,3 +1,1 @@
-"""
-Unit tests for MDF Parser CLI
-"""
+# __init__.py for tests package
