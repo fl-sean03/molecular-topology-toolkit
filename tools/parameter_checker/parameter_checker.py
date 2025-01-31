@@ -4,6 +4,7 @@ Compares parameters between MDF and CHARMM parameter files.
 """
 
 import logging
+import os
 from typing import Dict, Set, Tuple, List
 import json
 import pandas as pd
