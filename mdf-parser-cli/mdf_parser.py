@@ -3,6 +3,7 @@
 import argparse
 import logging
 import os
+import sys
 from rich.console import Console
 from parser.mdf_parser import parse_mdf_file
 from parser.topology import extract_topology
@@ -81,4 +82,4 @@ def main():
     return 0
 
 if __name__ == '__main__':
-    exit(main())
+    sys.exit(main())
