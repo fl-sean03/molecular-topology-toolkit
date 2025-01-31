@@ -1,14 +1,26 @@
 # MDF Parser CLI Tool
 
-A command-line application for parsing `.mdf` files and extracting molecular topology information. The tool provides structured outputs in CSV or JSON format and supports logging and verbosity options.
+A command-line application for parsing `.mdf` files and extracting molecular topology information. The tool provides structured outputs in CSV or JSON format with comprehensive logging capabilities.
+
+## Table of Contents
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Unit Tests](#unit-tests)
+- [Project Structure](#project-structure)
+- [Contributing](#contributing)
+- [License](#license)
+- [Future Improvements](#future-improvements)
+- [Authors](#authors)
+- [Acknowledgments](#acknowledgments)
 
 ## Features
 
 - Parse MDF files to extract molecular topology
 - Output in CSV or JSON formats
-- Extract bonds, angles, and dihedrals
-- Colorized output support using Rich
-- Configurable logging
+- Extract bonds, angles, and dihedrals from molecular data
+- Improved error handling with detailed messages
+- Configurable logging with verbosity levels
 - Verbose mode for detailed information
 - Option to separate output into multiple files
 
@@ -16,8 +28,17 @@ A command-line application for parsing `.mdf` files and extracting molecular top
 
 ### Prerequisites
 
-- Python 3.10 or higher
+- Python **3.10** or higher
 - pip package manager
+
+### Virtual Environment (Optional)
+
+It's recommended to use a virtual environment to manage dependencies:
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
 
 ### Setup
 
@@ -46,20 +67,40 @@ python mdf_parser.py input.mdf -o output.csv
 - `--json`: Output as JSON instead of CSV
 - `--separate`: Save separate CSVs for atoms, bonds, angles, dihedrals
 - `--verbose`: Enable detailed output
-- `--rich`: Enable colorized output
 - `--log`: Save logs to a specified file
 
 ### Examples
 
 Output as JSON with verbose logging:
 ```bash
-python mdf_parser.py molecule.mdf -o topology.json --json --verbose
+python mdf_parser.py molecule.mdf -o topology.json --json --verbose --log parser.log
 ```
 
 Save separate files with logging:
 ```bash
 python mdf_parser.py molecule.mdf --separate --log parser.log
 ```
+
+### Logging
+
+Use the `--log` option to save log outputs to a file. Logs include detailed information useful for debugging.
+
+Example:
+```bash
+python mdf_parser.py input.mdf --log logs/parser.log
+```
+
+Logs will be saved in the `logs/` directory.
+
+## Unit Tests
+
+To run the unit tests:
+
+```bash
+python -m unittest discover tests/
+```
+
+Ensure all tests pass to verify that the codebase is functioning correctly.
 
 ## Building Executable
 
@@ -93,30 +134,44 @@ mdf-parser-cli/
 │── README.md              # Project documentation
 │── setup.py               # Packaging configuration
 │── build_exe.py           # Script to convert to .exe
+│── LICENSE                # MIT License file
 ```
 
 ## Contributing
 
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
+Contributions are welcome! Please follow these steps:
+
+1. **Fork** the repository on GitHub.
+2. **Clone** your fork locally.
+3. **Create a new branch** for your feature or bugfix:
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+4. **Commit** your changes with descriptive messages.
+5. **Push** your branch to your fork:
+   ```bash
+   git push origin feature/your-feature-name
+   ```
+6. **Create a Pull Request** on the main repository.
+
+Please ensure that your code adheres to the project's coding standards and passes all unit tests.
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Future Improvements
 
-- Parallel processing for large .mdf files
+- Implement parallel processing for parsing large MDF files
+- Add support for dihedral angle calculations
+- Integration with other molecular dynamics tools and formats
 - CHARMM parameter integration
 - GUI or web interface
 - Support for additional file formats (GROMACS .top, .itp)
 
 ## Authors
 
-- Your Name (@yourusername)
+- Your Name - [@yourusername](https://github.com/yourusername) - your.email@example.com
 
 ## Acknowledgments
 
