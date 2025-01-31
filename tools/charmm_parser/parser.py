@@ -18,14 +18,17 @@ class CharmmProcessor:
 
     def process_file(self, filepath: str, output_dir: str) -> Dict[str, pd.DataFrame]:
         """Process a CHARMM parameter file and store results"""
+        logging.info(f"Processing CHARMM parameter file: {filepath}")
         self.filepath = filepath
         self.current_data = parse_charmm_parameter_file(filepath)
         
         # Save each section to a CSV file in the output directory
+        logging.info(f"Saving parsed data to: {output_dir}")
         for section_name, df in self.current_data.items():
             if not df.empty:
                 output_path = os.path.join(output_dir, f'{section_name}.csv')
                 df.to_csv(output_path, index=False)
+                logging.debug(f"Saved {section_name} section with {len(df)} entries to {output_path}")
         
         return self.current_data
 
@@ -83,20 +86,29 @@ def main(input_file: str, output_dir: str = '.', json_format: bool = False, verb
         if verbose:
             logging.getLogger().setLevel(logging.DEBUG)
             console.print("[bold blue]Starting CHARMM parameter file parsing...[/]")
+            console.print(f"[blue]Input file:[/] {input_file}")
+            console.print(f"[blue]Output directory:[/] {output_dir}")
+            console.print(f"[blue]Output format:[/] {'JSON' if json_format else 'CSV'}")
         
         processor = CharmmProcessor()
         data = processor.process_file(input_file, output_dir)
         
         if json_format:
+            console.print("[yellow]Converting to JSON format...[/]")
             for section, df in data.items():
                 output_path = os.path.join(output_dir, f'{section}.json')
                 df.to_json(output_path, orient='records', indent=2)
+                if verbose:
+                    console.print(f"[green]  Saved {section}.json[/]")
         
         if verbose:
-            console.print(f"[green]Successfully parsed {len(data)} sections[/]")
+            console.print("\n[bold green]Parsing Summary:[/]")
+            console.print(f"[green]Successfully parsed {len(data)} sections:[/]")
             for section, df in data.items():
-                console.print(f"  {section}: {len(df)} entries")
-            console.print("[bold green]Processing complete![/]")
+                console.print(f"  [cyan]{section}:[/] {len(df)} entries")
+                if not df.empty:
+                    console.print(f"    Columns: {', '.join(df.columns)}")
+            console.print("\n[bold green]Processing complete! ✓[/]")
             
         return 0
         
