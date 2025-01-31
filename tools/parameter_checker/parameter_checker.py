@@ -155,25 +155,49 @@ def main(
             console.print(f"  Dihedrals: {len(charmm_dihedrals)}")
         
         # Compare parameters
-        missing_atoms = compare_atoms(mdf_atoms, charmm_atoms)
-        missing_bonds = compare_parameters(bond_map, charmm_bonds)
-        missing_angles = mdf_angles - charmm_angles
-        missing_dihedrals = mdf_dihedrals - charmm_dihedrals
+        results = []
         
-        results = {
-            'atoms': list(missing_atoms),
-            'bonds': [list(bond) for bond in missing_bonds],
-            'angles': [list(angle) for angle in missing_angles],
-            'dihedrals': [list(dihedral) for dihedral in missing_dihedrals]
-        }
+        # Check atoms
+        atom_results = compare_atoms(mdf_atoms, charmm_atoms, charmm_data['ATOMS'])
+        results.extend(atom_results)
+        
+        # Check bonds
+        bond_results = compare_parameters(bond_map, charmm_bonds, charmm_data['BONDS'], 'bond')
+        results.extend(bond_results)
+        
+        # Check angles
+        angle_results = compare_parameters(angle_map, charmm_angles, charmm_data['ANGLES'], 'angle')
+        results.extend(angle_results)
+        
+        # Check dihedrals
+        dihedral_results = compare_parameters(dihedral_map, charmm_dihedrals, charmm_data['DIHEDRALS'], 'dihedral')
+        results.extend(dihedral_results)
         
         # Save results
         save_results(results, output_file, json_format)
         
         if verbose:
-            console.print("\n[bold green]Missing Parameters:[/]")
-            for param_type, missing in results.items():
-                console.print(f"[cyan]{param_type}:[/] {len(missing)}")
+            found = sum(1 for r in results if r['found'])
+            not_found = sum(1 for r in results if not r['found'])
+            
+            console.print("\n[bold green]Results Summary:[/]")
+            console.print(f"Parameters found: {found}")
+            console.print(f"Parameters not found: {not_found}")
+            
+            # Display found parameters
+            if found > 0:
+                console.print("\n[bold cyan]Found Parameters:[/]")
+                for r in results:
+                    if r['found']:
+                        console.print(f"  [green]{r['parameter_type'].upper()}:[/] {r['parameters']} [dim](line {r['line_number']})[/]")
+            
+            # Display missing parameters
+            if not_found > 0:
+                console.print("\n[bold red]Missing Parameters:[/]")
+                for r in results:
+                    if not r['found']:
+                        console.print(f"  [yellow]{r['parameter_type'].upper()}:[/] {r['parameters']}")
+            
             console.print(f"\n[bold green]Results saved to {output_file} ✓[/]")
         
         return 0
