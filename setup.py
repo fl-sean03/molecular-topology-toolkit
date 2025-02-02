@@ -15,7 +15,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'topology-parser=tools.cli:main',
+            'moltopkit=tools.cli:main',
         ],
     },
     author='Sean Florez',

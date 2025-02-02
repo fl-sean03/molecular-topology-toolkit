@@ -69,10 +69,10 @@ The toolkit provides a unified command-line interface:
 
 ```bash
 # MDF Parser
-topology-parser mdf input.mdf -o topology.csv
+moltopkit mdf input.mdf -o topology.csv
 
 # CHARMM Parser
-topology-parser charmm params.prm -o output_dir
+moltopkit charmm params.prm -o output_dir
 
 # Parameter Checker
 topology-parser check input.mdf params.prm -d output --save-all

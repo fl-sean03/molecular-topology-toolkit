@@ -19,7 +19,7 @@ A tool for comparing molecular parameters between MDF files and CHARMM parameter
 ### Command Line
 
 ```bash
-topology-parser check mdf_file.mdf charmm_file.prm [options]
+moltopkit check mdf_file.mdf charmm_file.prm [options]
 ```
 
 Options:
