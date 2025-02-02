@@ -1,6 +1,6 @@
 # Coding Standards
 
-This document outlines the coding standards for contributing to the molecular topology parser project.
+This document outlines the coding standards for contributing to the computational chemistry and materials science toolkit.
 
 ## Python Version
 

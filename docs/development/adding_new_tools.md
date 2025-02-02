@@ -1,6 +1,6 @@
 # Adding New Tools to the Project
 
-This guide explains how to add new tools to the molecular topology parser project while maintaining consistency and quality.
+This guide explains how to add new tools to the computational chemistry and materials science toolkit while maintaining consistency and quality.
 
 ## Directory Structure
 
@@ -11,8 +11,10 @@ tools/
 └── your_tool_name/
     ├── __init__.py
     ├── README.md
-    ├── parser.py        # Main functionality
-    └── additional_modules.py
+    ├── main.py         # Main functionality
+    ├── core.py         # Core algorithms/computations
+    ├── io.py          # Input/output handling
+    └── utils.py       # Utility functions
 ```
 
 ## Step-by-Step Guide

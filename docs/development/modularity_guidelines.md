@@ -1,6 +1,6 @@
 # Modularity Guidelines
 
-This document outlines the principles and practices for maintaining modularity in the molecular topology parser project.
+This document outlines the principles and practices for maintaining modularity in the computational chemistry and materials science toolkit.
 
 ## Module Organization
 
