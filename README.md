@@ -123,17 +123,41 @@ isort .
 ## Project Structure
 
 ```
-molecular-topology-parser/
+molecular-topology-toolkit/
 ├── tools/
+│   ├── __init__.py
+│   ├── cli.py
 │   ├── mdf_parser/      # MDF file parsing
+│   │   ├── __init__.py
+│   │   ├── README.md
+│   │   ├── parser.py
+│   │   ├── mdf_parser.py
+│   │   ├── topology.py
+│   │   ├── output_handler.py
+│   │   └── tests/
+│   │       └── test_mdf_parser.py
 │   ├── charmm_parser/   # CHARMM parameter parsing
+│   │   ├── __init__.py
+│   │   ├── README.md
+│   │   ├── parser.py
+│   │   ├── parsers.py
+│   │   └── tests/
+│   │       └── test_charmm_parser.py
 │   └── parameter_checker/# Parameter comparison
-├── tests/
-│   ├── data/           # Test data files
-│   └── test_*.py       # Test modules
-├── docs/               # Documentation
-├── requirements.txt    # Project dependencies
-└── setup.py           # Package configuration
+│       ├── __init__.py
+│       ├── README.md
+│       └── parameter_checker.py
+├── docs/
+│   └── development/    # Development guidelines
+│       ├── adding_new_tools.md
+│       ├── coding_standards.md
+│       └── modularity_guidelines.md
+├── CONTRIBUTING.md     # Contribution guidelines
+├── LICENSE            # MIT License
+├── README.md         # Project documentation
+├── requirements.txt  # Project dependencies
+├── pyproject.toml   # Build configuration
+└── setup.py         # Package configuration
 ```
 
 ## Contributing
