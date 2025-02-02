@@ -6,8 +6,8 @@ with open('README.md', 'r', encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name='molecular_topology_parser',
-    version='0.1.0',
+    name='molecular_topology_toolkit',
+    version='0.2.0',
     packages=find_packages(),
     install_requires=[
         'pandas>=1.3.0',
