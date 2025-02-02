@@ -21,12 +21,12 @@ This project and everyone participating in it is governed by our [Code of Conduc
 1. Fork the repository
 2. Clone your fork:
    ```bash
-   git clone https://github.com/your-username/molecular-topology-toolkit.git
+   git clone https://github.com/fl-sean03/molecular-topology-toolkit.git
    cd molecular-topology-toolkit
    ```
 3. Add the upstream repository:
    ```bash
-   git remote add upstream https://github.com/original-owner/molecular-topology-toolkit.git
+   git remote add upstream https://github.com/fl-sean03/molecular-topology-toolkit.git
    ```
 
 ## Development Setup

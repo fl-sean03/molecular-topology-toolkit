@@ -23,7 +23,7 @@ setup(
     description='A toolkit for parsing molecular topology files in CHARMM parameter and MDF formats.',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://github.com/yourusername/molecular-topology-parser',
+    url='https://github.com/fl-sean03/molecular-topology-toolkit',
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Science/Research',

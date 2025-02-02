@@ -53,7 +53,7 @@ The toolkit is designed to expand with additional tools for:
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/molecular-topology-toolkit.git
+git clone https://github.com/fl-sean03/molecular-topology-toolkit.git
 cd molecular-topology-toolkit
 
 # Install dependencies
