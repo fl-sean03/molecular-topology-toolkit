@@ -75,7 +75,7 @@ moltopkit mdf input.mdf -o topology.csv
 moltopkit charmm params.prm -o output_dir
 
 # Parameter Checker
-topology-parser check input.mdf params.prm -d output --save-all
+moltopkit check input.mdf params.prm -d output --save-all
 ```
 
 See individual tool READMEs for detailed usage instructions.
