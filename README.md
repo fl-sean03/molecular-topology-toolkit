@@ -91,18 +91,6 @@ source venv/bin/activate  # or venv\Scripts\activate on Windows
 pip install -r requirements.txt
 ```
 
-### Running Tests
-
-```bash
-# Run all tests
-python -m pytest
-
-# Run with coverage
-python -m pytest --cov=tools
-
-# Run specific test file
-python -m pytest tests/test_mdf_parser.py
-```
 
 ### Code Style
 
