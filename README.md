@@ -1,21 +1,29 @@
 # Molecular Topology Parser Tools
 
-A Python toolkit for parsing and analyzing molecular topology files in CHARMM parameter and MDF formats.
+A comprehensive Python toolkit for analyzing and comparing molecular topology files, supporting CHARMM parameter files and Molecular Data Format (MDF) files.
 
-## Features
+## Overview
 
-- Parse CHARMM parameter files (.prm)
-  - Extract bonds, angles, dihedrals, and improper parameters
-  - Support for comments and metadata
-  - Output to CSV or JSON formats
-  
-- Parse MDF (Molecular Data Format) files
-  - Extract molecular topology information
-  - Generate bond, angle, and dihedral connectivity
-  - Support for charge groups
-  - Output to CSV or JSON formats
+This toolkit provides three main tools:
 
-## Installation
+1. [MDF Parser](tools/mdf_parser/README.md)
+   - Parse Molecular Data Format files
+   - Extract topology information
+   - Generate structured molecular data
+
+2. [CHARMM Parser](tools/charmm_parser/README.md)
+   - Parse CHARMM parameter files
+   - Extract force field parameters
+   - Organize molecular force field data
+
+3. [Parameter Checker](tools/parameter_checker/README.md)
+   - Compare MDF and CHARMM parameters
+   - Identify missing parameters
+   - Validate molecular force fields
+
+## Quick Start
+
+### Installation
 
 ```bash
 # Clone the repository
@@ -23,82 +31,114 @@ git clone https://github.com/yourusername/molecular-topology-parser.git
 cd molecular-topology-parser
 
 # Install dependencies
-pip install pandas rich
+pip install -r requirements.txt
+
+# Install package
+pip install -e .
 ```
 
-## Usage
+### Basic Usage
 
-The toolkit provides a unified command-line interface for both parsers:
-
-### CHARMM Parameter File Parser
+The toolkit provides a unified command-line interface:
 
 ```bash
-./cli.py charmm input.prm -o output_dir --json --verbose
+# MDF Parser
+topology-parser mdf input.mdf -o topology.csv
+
+# CHARMM Parser
+topology-parser charmm params.prm -o output_dir
+
+# Parameter Checker
+topology-parser check input.mdf params.prm -d output --save-all
 ```
 
-Options:
-- `input.prm`: Path to CHARMM parameter file
-- `-o/--output_dir`: Output directory (default: current directory)
-- `--json`: Output in JSON format instead of CSV
-- `--verbose`: Enable detailed output
-- `--log`: Save logs to specified file
+See individual tool READMEs for detailed usage instructions.
 
-### MDF File Parser
+## Requirements
+
+- Python 3.6+
+- pandas >= 1.3.0
+- rich >= 10.0.0
+
+Additional development requirements:
+- pytest >= 6.0.0
+- coverage >= 6.0.0
+- black >= 22.0.0
+- flake8 >= 4.0.0
+- sphinx >= 4.0.0
+
+## Development
+
+### Setup Development Environment
 
 ```bash
-./cli.py mdf input.mdf -o topology.csv --json --separate --verbose
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # or venv\Scripts\activate on Windows
+
+# Install development dependencies
+pip install -r requirements.txt
 ```
 
-Options:
-- `input.mdf`: Path to MDF file
-- `-o/--output`: Output file name (default: topology.csv)
-- `--json`: Output in JSON format instead of CSV
-- `--separate`: Save separate files for each component
-- `--verbose`: Enable detailed output
-- `--log`: Save logs to specified file
-
-## API Usage
-
-### CHARMM Parser
-
-```python
-from tools.charmm_parser import CharmmProcessor
-
-processor = CharmmProcessor()
-data = processor.process_file("input.prm", "output_dir")
-```
-
-### MDF Parser
-
-```python
-from tools.mdf_parser import parse_mdf_file, extract_topology, save_output
-
-# Parse MDF file
-atoms_data = parse_mdf_file("input.mdf")
-
-# Extract topology
-bonds, angles, dihedrals = extract_topology(atoms_data)
-
-# Save results
-save_output("output.csv", atoms_data, json_format=False, separate_files=True)
-```
-
-## Testing
-
-Run the test suite:
+### Running Tests
 
 ```bash
-python -m unittest discover tests
+# Run all tests
+python -m pytest
+
+# Run with coverage
+python -m pytest --cov=tools
+
+# Run specific test file
+python -m pytest tests/test_mdf_parser.py
+```
+
+### Code Style
+
+The project follows PEP 8 guidelines with some modifications:
+- Line length: 100 characters
+- Uses Black for code formatting
+- Sorted imports using isort
+
+Format code before committing:
+```bash
+black .
+isort .
+```
+
+## Project Structure
+
+```
+molecular-topology-parser/
+├── tools/
+│   ├── mdf_parser/      # MDF file parsing
+│   ├── charmm_parser/   # CHARMM parameter parsing
+│   └── parameter_checker/# Parameter comparison
+├── tests/
+│   ├── data/           # Test data files
+│   └── test_*.py       # Test modules
+├── docs/               # Documentation
+├── requirements.txt    # Project dependencies
+└── setup.py           # Package configuration
 ```
 
 ## Contributing
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+3. Run tests and ensure they pass
+4. Format code using Black and isort
+5. Commit your changes (`git commit -m 'Add amazing feature'`)
+6. Push to the branch (`git push origin feature/amazing-feature`)
+7. Open a Pull Request
+
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- Thanks to all contributors who have helped shape this project
+- Special thanks to the molecular modeling community for their input and feedback
