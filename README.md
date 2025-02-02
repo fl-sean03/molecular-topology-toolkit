@@ -1,10 +1,12 @@
-# Molecular Topology Parser Tools
+# Molecular Topology Toolkit
 
-A comprehensive Python toolkit for analyzing and comparing molecular topology files, supporting CHARMM parameter files and Molecular Data Format (MDF) files.
+A comprehensive Python toolkit for computational chemistry and materials science, providing tools for molecular topology analysis, force field parameter handling, and more.
 
 ## Overview
 
-This toolkit provides three main tools:
+This toolkit provides a growing collection of tools for computational chemistry and materials science:
+
+### Current Tools
 
 1. [MDF Parser](tools/mdf_parser/README.md)
    - Parse Molecular Data Format files
@@ -21,14 +23,23 @@ This toolkit provides three main tools:
    - Identify missing parameters
    - Validate molecular force fields
 
+### Future Tools
+
+The toolkit is designed to expand with additional tools for:
+- Molecular dynamics analysis
+- Structure visualization
+- Force field parameterization
+- Property prediction
+- And more...
+
 ## Quick Start
 
 ### Installation
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/molecular-topology-parser.git
-cd molecular-topology-parser
+git clone https://github.com/yourusername/molecular-topology-toolkit.git
+cd molecular-topology-toolkit
 
 # Install dependencies
 pip install -r requirements.txt
